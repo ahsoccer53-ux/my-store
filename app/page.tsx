@@ -1,6 +1,6 @@
 import { client } from "@/lib/microcms"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
 import { Search, Menu, ChevronRight, Heart } from "lucide-react"
@@ -13,8 +13,13 @@ export default async function Home() {
   const news = data.contents || []
   const topNews = news.length > 0 ? news[0] : null;
 
+  // カテゴリ判定用の補助関数（microCMSのデータ形式が配列でも文字列でも対応）
+  const getCat = (item: any) => {
+    const cat = Array.isArray(item.category) ? item.category[0] : item.category;
+    return cat?.toString().trim();
+  };
+
   return (
-    // 全体のテキストカラーを濃いピンク（rose-400）に固定
     <div className="bg-[#fffafa] min-h-screen font-sans text-rose-400 overflow-x-hidden">
       <header className="border-b border-pink-100 sticky top-0 bg-white/80 backdrop-blur-md z-50">
         <div className="max-w-7xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
@@ -37,6 +42,7 @@ export default async function Home() {
       <main className="max-w-7xl mx-auto px-4 py-6 md:py-8">
         {topNews ? (
           <>
+            {/* メインの特大記事エリア（ここは全カテゴリ共通） */}
             <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8 md:gap-10 mb-12 md:mb-16">
               <Link 
                 href={`/news/${topNews.id}`} 
@@ -49,12 +55,10 @@ export default async function Home() {
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-1000" 
                   />
                 </AspectRatio>
-                {/* 影を完全になくし、白〜淡いピンクのグラデーションに */}
                 <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 bg-gradient-to-t from-white/95 via-white/80 to-transparent">
                   <Badge className="bg-pink-100 text-pink-400 mb-2 md:mb-3 uppercase text-[9px] md:text-[10px] tracking-widest px-3 py-1 border-none font-bold rounded-full">
-                    {Array.isArray(topNews.category) ? topNews.category[0] : topNews.category || "NEWS"}
+                    {getCat(topNews) || "NEWS"}
                   </Badge>
-                  {/* メインタイトルを濃いピンクに変更 */}
                   <h2 className="text-xl md:text-3xl font-bold leading-tight text-rose-500">
                     {topNews.title}
                   </h2>
@@ -75,10 +79,9 @@ export default async function Home() {
                       </AspectRatio>
                     </div>
                     <div className="flex flex-col justify-center">
-                      {/* 横の記事リストのタイトルをピンクに */}
                       <h4 className="text-sm md:text-[15px] font-bold leading-snug text-rose-400 group-hover:text-pink-500 transition-colors">{item.title}</h4>
                       <p className="text-[9px] text-pink-200 mt-1 font-bold uppercase tracking-widest">
-                        {Array.isArray(item.category) ? item.category[0] : item.category || "NEWS"}
+                        {getCat(item) || "NEWS"}
                       </p>
                     </div>
                   </Link>
@@ -86,31 +89,55 @@ export default async function Home() {
               </div>
             </div>
 
+            {/* 下部の最新記事一覧 ＋ カテゴリ切り替え機能 */}
             <div className="pt-6">
-              <div className="flex items-center justify-center mb-12">
-                <div className="h-[2px] bg-pink-50 flex-grow max-w-[50px]"></div>
-                <h2 className="px-6 text-pink-300 font-black tracking-[0.3em] text-sm">LATEST ITEMS</h2>
-                <div className="h-[2px] bg-pink-50 flex-grow max-w-[50px]"></div>
-              </div>
+              <Tabs defaultValue="all" className="w-full">
+                <div className="flex flex-col items-center mb-12">
+                  <div className="flex items-center justify-center mb-8 w-full">
+                    <div className="h-[2px] bg-pink-50 flex-grow max-w-[50px]"></div>
+                    <h2 className="px-6 text-pink-300 font-black tracking-[0.3em] text-sm uppercase">LATEST ITEMS</h2>
+                    <div className="h-[2px] bg-pink-50 flex-grow max-w-[50px]"></div>
+                  </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
-                {news.map((item: any) => (
-                  <Link 
-                    href={`/news/${item.id}`} 
-                    key={item.id} 
-                    className="group cursor-pointer block text-center"
-                  >
-                    <AspectRatio ratio={1 / 1} className="mb-4 overflow-hidden rounded-[3rem] border-4 border-white shadow-md shadow-pink-100/50">
-                      <img src={item.image?.url || ""} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
-                    </AspectRatio>
-                    <span className="text-[9px] font-bold text-pink-200 uppercase tracking-[0.15em]">
-                      {Array.isArray(item.category) ? item.category[0] : item.category || "NEWS"}
-                    </span>
-                    {/* 一覧の各タイトルをピンクに */}
-                    <h5 className="text-xs md:text-sm font-bold mt-2 text-rose-400 group-hover:text-pink-500">{item.title}</h5>
-                  </Link>
+                  {/* タブボタンのデザインをサイトに馴染ませて配置 */}
+                  <TabsList className="bg-transparent h-auto p-0 flex flex-wrap justify-center gap-2">
+                    {["all", "Fashion", "Goods", "Gift", "Living"].map((cat) => (
+                      <TabsTrigger 
+                        key={cat} 
+                        value={cat} 
+                        className="rounded-full px-5 py-1.5 text-[10px] font-bold uppercase tracking-widest border border-pink-100 data-[state=active]:bg-pink-400 data-[state=active]:text-white text-pink-300"
+                      >
+                        {cat === "all" ? "All" : cat}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </div>
+
+                {/* 各タブの中身 */}
+                {["all", "Fashion", "Goods", "Gift", "Living"].map((currentTab) => (
+                  <TabsContent key={currentTab} value={currentTab} className="outline-none">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+                      {news
+                        .filter(item => currentTab === "all" || getCat(item) === currentTab)
+                        .map((item: any) => (
+                        <Link 
+                          href={`/news/${item.id}`} 
+                          key={item.id} 
+                          className="group cursor-pointer block text-center"
+                        >
+                          <AspectRatio ratio={1 / 1} className="mb-4 overflow-hidden rounded-[3rem] border-4 border-white shadow-md shadow-pink-100/50">
+                            <img src={item.image?.url || ""} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
+                          </AspectRatio>
+                          <span className="text-[9px] font-bold text-pink-200 uppercase tracking-[0.15em]">
+                            {getCat(item) || "NEWS"}
+                          </span>
+                          <h5 className="text-xs md:text-sm font-bold mt-2 text-rose-400 group-hover:text-pink-500">{item.title}</h5>
+                        </Link>
+                      ))}
+                    </div>
+                  </TabsContent>
                 ))}
-              </div>
+              </Tabs>
             </div>
           </>
         ) : (
