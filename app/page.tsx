@@ -5,7 +5,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
 import { Search, Menu, ChevronRight, Heart } from "lucide-react"
-
+// ★ここに追加！これだけで「常に最新」を見にいくようになります
+export const revalidate = 0;
 // microCMSから届くデータの形を定義
 type NewsItem = {
   id: string
