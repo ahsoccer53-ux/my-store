@@ -118,7 +118,7 @@ export default async function Home() {
                   <TabsContent key={currentTab} value={currentTab} className="outline-none">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
                       {news
-                        .filter(item => currentTab === "all" || getCat(item) === currentTab)
+                        .filter((item: any) => currentTab === "all" || getCat(item) === currentTab)
                         .map((item: any) => (
                         <Link 
                           href={`/news/${item.id}`} 
