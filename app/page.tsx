@@ -101,7 +101,7 @@ export default async function Home() {
 
                   {/* タブボタンのデザインをサイトに馴染ませて配置 */}
                   <TabsList className="bg-transparent h-auto p-0 flex flex-wrap justify-center gap-2">
-                    {["all", "Fashion", "Goods", "Gift", "Living"].map((cat) => (
+                    {["all", "Fashion", "Goods", "Gift", "Lifestile"].map((cat) => (
                       <TabsTrigger 
                         key={cat} 
                         value={cat} 
@@ -114,7 +114,7 @@ export default async function Home() {
                 </div>
 
                 {/* 各タブの中身 */}
-                {["all", "Fashion", "Goods", "Gift", "Living"].map((currentTab) => (
+                {["all", "Fashion", "Goods", "Gift", "Lifestile"].map((currentTab) => (
                   <TabsContent key={currentTab} value={currentTab} className="outline-none">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
                       {news
