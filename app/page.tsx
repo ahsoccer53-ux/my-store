@@ -25,12 +25,13 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6">
             <Menu className="h-5 w-5 cursor-pointer text-pink-300" />
-            <h1 className="text-xl md:text-2xl font-black tracking-tighter text-pink-500">BabyBaby</h1>
+            <h1 className="text-xl md:text-2xl font-black tracking-tighter text-pink-500">BabyMagazine</h1>
           </div>
           <nav className="hidden lg:flex gap-8 text-[11px] font-bold uppercase tracking-[0.2em]">
             <span className="cursor-pointer text-pink-500 border-b-2 border-pink-200 pb-1">Fashion</span>
-            <span className="cursor-pointer text-pink-300 hover:text-pink-500 transition-colors">Lifestyle</span>
+            <span className="cursor-pointer text-pink-300 hover:text-pink-500 transition-colors">Goods</span>
             <span className="cursor-pointer text-pink-300 hover:text-pink-500 transition-colors">Gift</span>
+            <span className="cursor-pointer text-pink-300 hover:text-pink-500 transition-colors">Lifestyle</span>
           </nav>
           <div className="flex items-center gap-3 md:gap-4">
              <Heart className="h-5 w-5 text-pink-300 fill-pink-100" />
@@ -148,9 +149,9 @@ export default async function Home() {
       </main>
 
       <footer className="mt-20 py-20 bg-white text-center rounded-t-[3rem] border-t border-pink-50">
-        <p className="text-2xl font-black tracking-tighter text-pink-200 mb-6 italic">BabyBaby</p>
+        <p className="text-2xl font-black tracking-tighter text-pink-200 mb-6 italic">BabyMagazine</p>
         <p className="text-[10px] text-pink-300 font-bold tracking-widest">
-          © 2026 BabyBaby ・ SOFT & CUTE MAGAZINE
+          © 2026 BabyMagazine ・ SOFT & CUTE MAGAZINE
         </p>
       </footer>
     </div>
